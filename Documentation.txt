@@ -1,0 +1,148 @@
+##################################### CAFFE DOCUMENTATION ###########################################
+
+This guide is a user-based guide on how to download, install and use caffe. Specifically, the usage 
+caffe for visual odometry application in EECS 542 project. For any issues, please contact :
+madantrg@umich.edu
+
+Contents
+1. Installation 
+2. Crash course on running caffe for your dataset
+3. Layer details
+4. Project implementation details
+
+1. Installation (GPU compatible)
+No single guide is the ultimate guide to help install caffe correctly. I am going to try and cover my
+basis on how to install and run caffe. My personal system has a Nvidia GeForce 970 installed with i7 
+5820 6 core CPU and runs Ubuntu 14.04. My current python version is 2.7 and anaconda is not a pre-requisite.
+
+The major dependencies for CAFFE are : CUDA, protobuf, leveldb, snappy, opencv, hdf5, boost, glog,
+lmdb, BLAS, gflags, cuDNN and python/matlab.
+
+    1. CUDA installation
+       This represents a major installation component for CAFFE. In order to check if your system is
+       CUDA compatible, execute the following commands,
+       a) lspci | grep -i nvidia : This should throw up your current nvidia CUDA compatible card's info
+       Also, you can verify if your GPU is cuda compatible by using the following site,  
+       http://developer.nvidia.com/cuda-gpus
+       b) uname -m && cat /etc/*release : This should throw up the distribution and release number of 
+       linux being used.
+       c) gcc --version : This should show the current GCC compiler version installed on the system.
+       If there is an error message, re-install dev tools.
+       d) Download the nvidia CUDA toolkit from http://developer.nvidia.com/cuda-downloads.
+       e) sudo dpkg -i cuda-repo-<distro>_<version>_<architecture>.deb
+       f) sudo apt-get update
+       g) sudo apt-get install cuda
+
+    2. Other dependencies 
+       a) Protobuf : sudo apt-get install libprotobuf-dev protobuf-compiler (There are suggestions to use 
+                     pip to obtain the most recent version so pip install protobuf is the command for that).
+       b) leveldb : sudo apt-get install libleveldb-dev
+       c) snappy : sudo apt-get install libsnappy-dev
+       d) opencv : sudo apt-get install libopencv-dev
+       e) hdf5 : sudo apt-get install libhdf5-serial-dev
+       f) boost : sudo apt-get install --no-install-recommends libboost-all-dev
+       g) glog : sudo apt-get install libgoogle-glog-dev
+       h) LMDB : sudo apt-get install liblmdb-dev
+       i) BLAS : sudo apt-get install libatlas-base-dev
+       j) sudo apt-get install libgflags-dev 
+
+    3. cuDNN installation
+       The installation of cuDNN is not compulsory. It is a more streamlined package released by nvidia
+       for deep learning.
+       a) Download the cuDNN files from https://developer.nvidia.com/cuDNN
+       b) tar -xzvf cudnn-<version number>-linux-<extensions>.tgz
+       c) cd into the extracted directory
+       d) Copy the contents of lib64 into /usr/local/cuda<version>/lib64/
+       e) Copy the contents of include directory into /usr/local/cuda<version>/include/
+
+    4. Installing CAFEE
+       a) Clone the repo https://github.com/BVLC/caffe.git
+       b) cd caffe
+       c) cp Makefile.config.example Makefile.config
+       d) The Makefil itself has wonderful comments. In order to activate cuDNN uncomment the line cuDNN=1
+       e) Ensure the rest of the settings match with your software installations.
+       f) cd into the python folder and execute for req in $(cat requirements.txt); do pip install $req; done
+       g) make all
+       h) make pycaffe
+       i) make test
+       j) make runtest
+
+Once all of these commands execute without issues, caffe has been installed, with GPU compatibility successfully.
+
+??? from here until ???END lines may have been inserted/deleted
+References: http://caffe.berkeleyvision.org/installation.html, https://gist.github.com/titipata/f0ef48ad2f0ebc07bcb9,
+https://github.com/BVLC/caffe, http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/#axzz44Bgd8tA3
+
+2. Crash course on running CAFFE for your dataset
+CAFFE is a complex system that is difficult to wrap one's head around. It is impossible to do so immediately, so in case
+you wanted to chop and change existing code and run your training and testing algorithm, this section should help you do
+so seamlessly.
+
+To begin with, there are 3 main components to executing your code and training a CNN on your dataset.
+1. Dataset conversion
+2. Layer definitions
+3. Solver definition
+
+    1. Dataset conversion
+       LevelDB, HDF5 and LMDB are the major recognised format to which you need to convert you dataset.
+       To convert any dataset to LMDB format, we need 2 items, the path to dataset images and a text file indicating
+       the name of the image and it's corresponding label.
+       Once these exist, the conversion can be performed using the following commands,
+
+       a) GLOG_logtostderr=1 /path/to/tools/convert_imageset \
+          --shuffle \
+          /path/to/images/ \
+          /path/to/textfile.txt \
+          /path/to/lmdb_training_location
+          (shuffle sets a random order for the list of images included for training/testing)     
+       b) CAFFE, in general, has vision, data, loss, activation/neuron and other common layers like flatten etc.
+          Every layers defnition is compiled into a prototxt file. A general mock up of the format involved is shown.
+
+          Eg: Convolutional layer
+         
+          name: "conv1"
+          type: CONVOLUTION
+          bottom: "data"
+          top: "conv1"
+          convolution_param {
+            num_output: 20
+            kernel_size: 5
+            stride: 1
+            weight_filler {
+                type: "xavier"
+            }
+         }
+    
+         Also, another good reference guide is the lenet_train_test.prototxt located at $CAFFE_ROOT/examples/mnist/
+
+      c) Once the layers have been defined, we need to create a solver protobuffer. This is the final script that will be
+         used by the train_net tool to train the network. If the network defined has testing included, then the number of 
+         test iterations, along with intervals in training when to test and more can be defined. As a simple guide you can 
+         utilize the format shown below,
+
+         net: "examples/mnist/lenet_train_test.prototxt"
+         test_iter: 100
+         test_interval: 500
+         base_lr: 0.01
+         momentum: 0.9
+         weight_decay: 0.0005
+         lr_policy: "inv"
+         gamma: 0.0001
+         power: 0.75
+         display: 100
+         max_iter: 10000
+
+    Once these steps are complete, you can begin training by executing the following command,
+    $CAFFE_ROOT/build/tools/train_net.bin <protosolver_name>
+         
+    
+References: http://stackoverflow.com/questions/31427094/guide-to-use-convert-imageset-cpp,
+http://caffe.berkeleyvision.org/tutorial/layers.html
+
+3. Layer details
+
+4. Project implementation details
+This section details the layers used for the EECS542 project on visual odometry and other relevant information.
+
+
+
