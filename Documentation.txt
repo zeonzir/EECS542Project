@@ -7,8 +7,9 @@ madantrg@umich.edu
 Contents
 1. Installation 
 2. Crash course on running caffe for your dataset
-3. Layer details
-4. Project implementation details
+3. Pre-processing Data
+4. Layer details
+5. Project implementation details
 
 1. Installation (GPU compatible)
 No single guide is the ultimate guide to help install caffe correctly. I am going to try and cover my
@@ -95,6 +96,8 @@ To begin with, there are 3 main components to executing your code and training a
           /path/to/textfile.txt \
           /path/to/lmdb_training_location
           (shuffle sets a random order for the list of images included for training/testing)     
+          Ensure that lmdb_training_location folder does not exist
+
        b) CAFFE, in general, has vision, data, loss, activation/neuron and other common layers like flatten etc.
           Every layers defnition is compiled into a prototxt file. A general mock up of the format involved is shown.
 
@@ -133,15 +136,18 @@ To begin with, there are 3 main components to executing your code and training a
          max_iter: 10000
 
     Once these steps are complete, you can begin training by executing the following command,
-    $CAFFE_ROOT/build/tools/train_net.bin <protosolver_name>
+    $CAFFE_ROOT/build/tools/caffe train -solver  <protosolver_name>
          
     
 References: http://stackoverflow.com/questions/31427094/guide-to-use-convert-imageset-cpp,
 http://caffe.berkeleyvision.org/tutorial/layers.html
 
-3. Layer details
+3. Pre-processing data
 
-4. Project implementation details
+
+4. Layer details
+
+5. Project implementation details
 This section details the layers used for the EECS542 project on visual odometry and other relevant information.
 
 
