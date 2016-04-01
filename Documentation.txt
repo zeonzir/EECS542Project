@@ -144,6 +144,43 @@ http://caffe.berkeleyvision.org/tutorial/layers.html
 
 3. Pre-processing data
 
+CAFFE requires a combined input of data and its corresponding labels to be fed into the data layer. In my experience with 
+CAFFE, there are three main types of accepted data types for this purpose, Leveldb,LMDB and HDF5.  
+CAFFE offers a default tool to help convert to LMDB format, called convert_imagenet. It is located at $CAFFE_ROOT/build/tools.
+ However, its primary restriction is that it accepted only SINGLE INTEGER labels for each image. I will list the pre-processing format 
+techniques and provide custom scripts to aid in the process.
+
+    a) Default convert_imagenet
+       The default conversion tool requires 2 main inputs, a listing of the absolute paths/relative to CAFFE paths of the dataset
+       and a text file listing these path alongside their labels. A sample of the required format is shown below,
+
+        <train.txt>
+       /home/<user>/Documents/IMG000.jpg 0
+       /home/<user>/Documents/IMG001.jpg 1 
+        </train.txt>
+       
+       Once they are available, we need to execute the following command to obtain the LMDB converted dataset.
+       
+       GLOG_logtostderr=1 $CAFFE_ROOT/build/tools/convert_imageset \
+       --resize_height=200 --resize_width=200 --shuffle  \
+       /path/to/jpegs/ \
+       /path/to/labels/train.txt \
+       /path/to/lmdb/train_lmdb
+
+    b) HDF5 custom converter
+       I have provided a script to help convert data into HDF5 format. This supports both single and multi-label non-int inputs.
+       However, HDF5 has a restriction. When the data input is in this format, transform_params cannot be used. Hence, any online 
+       pre-processing is restricted.
+
+    c) LMDB custom converter
+       The template for this converter closely resembles that of HDF5. However, when input is provided in this format, transform_params
+       is allowed to pre-process data. Currently, this is the primary advantage I have observed.
+
+References: http://stackoverflow.com/questions/31427094/guide-to-use-convert-imageset-cpp
+http://stackoverflow.com/questions/31774953/test-labels-for-regression-caffe-float-not-allowed/31808324#31808324
+       
+
+
 
 4. Layer details
 
