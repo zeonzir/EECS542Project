@@ -70,7 +70,9 @@ lmdb, BLAS, gflags, cuDNN and python/matlab.
 
 Once all of these commands execute without issues, caffe has been installed, with GPU compatibility successfully.
 
-??? from here until ???END lines may have been inserted/deleted
+NOTE: Please install cuDNN v4 and not v5 since it seems to have issues when compiling with cuda toolkit 7.5. Also, if lib files are not available in cuda<version>/lib64 check under cuda<version>/targets/x86_64/lib64 and copy them
+
+
 References: http://caffe.berkeleyvision.org/installation.html, https://gist.github.com/titipata/f0ef48ad2f0ebc07bcb9,
 https://github.com/BVLC/caffe, http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/#axzz44Bgd8tA3
 

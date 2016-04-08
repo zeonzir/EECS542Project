@@ -1,0 +1,22 @@
+#in/test net protocol buffer definition
+net: "/media/zeonzir/Data/EECS542/Project/EECS542Project/Model/Baseline/kitti_train.prototxt"
+
+#test_iter: 316 
+#test_interval: 500
+# The base learning rate, momentum and the weight decay of the network.
+base_lr: 0.001
+momentum: 0.9
+weight_decay: 0.0005
+# The learning rate policy
+lr_policy: "step"
+gamma: 2
+stepsize: 20000
+# Display every 100 iterations
+display: 100
+# The maximum number of iterations
+max_iter: 60000
+# snapshot intermediate results
+snapshot: 1000
+snapshot_prefix: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/processed_data"
+# solver mode: CPU or GPU
+solver_mode: GPU
