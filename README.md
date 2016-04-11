@@ -1,6 +1,8 @@
 # EECS542Project
 Visual odometry project
 Updates in inverse chronological order
+- After 40K iterations training loss not right, beginning to debug
+- Discussed baseline 3 and 4 network structures
 - Training started
 - Design of network architecture complete (Baseline 2)
 - Design of network architecture complete (Baseline 1)

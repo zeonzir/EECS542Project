@@ -10,10 +10,7 @@ layer {
 
   hdf5_data_param {
     source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_list.txt"
-    batch_size: 64 
-  }
-  transform_param {
-    scale: 1
+    batch_size: 80 
   }
 }
 layer {
@@ -26,7 +23,7 @@ layer {
    }
   hdf5_data_param {
     source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/test_h5_list.txt"
-    batch_size: 64
+    batch_size: 80
    }
 }
 ## Slicing images to create the left and right ones
@@ -41,20 +38,6 @@ layer {
     slice_point: 3
    }
 }
-## Slicing label layers for use with the soft max layers
-layer {
-  name: "slice_label"
-  type: "Slice"
-  bottom: "y"
-  top: "label1"
-  top: "label2"
-  top: "label3"
-  slice_param {
-    slice_dim:1 
-    slice_point: 1 
-    slice_point: 2
-  }
-} 
 ## BCNN layer 1
 layer {
   name: "conv1a"
@@ -609,53 +592,39 @@ layer {
   }
 }
 layer {
-  name: "accuracy1"
-  type: "Accuracy"
+  name: "op"
+  type: "InnerProduct"
   bottom: "fc1"
-  bottom: "label1"
-  top: "accuracy1"
-  include {
-    phase: TEST
+  top: "op"
+  param {
+    name: "op_w"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    name: "op_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 3
+    weight_filler {
+        type: "gaussian"
+        std: 0.01
+    }
+    bias_filler {
+        type: "constant"
+        value: 0
+    }
   }
 }
 layer {
-  name: "lossX"
-  type: "SoftmaxWithLoss"
-  bottom: "fc1"
-  bottom: "label1"
-  top: "loss1"
-}
-layer {
-  name: "accuracy2"
-  type: "Accuracy"
-  bottom: "fc1"
-  bottom: "label2"
-  top: "accuracy2"
+  name: "eucloss"
+  type: "EuclideanLoss"
+  bottom: "op"
+  bottom: "y"
+  top: "loss"
   include {
-    phase: TEST
+    phase: TRAIN
   }
-}  
-layer {
-  name: "lossZ"
-  type: "SoftmaxWithLoss"
-  bottom: "fc1"
-  bottom: "label2"
-  top: "loss2"
 }
-layer {
-  name: "accuracy3"
-  type: "Accuracy"
-  bottom: "fc1"
-  bottom: "label3"
-  top: "accuracy3"
-  include {
-    phase: TEST
-  }
-}  
-layer {
-  name: "lossY"
-  type: "SoftmaxWithLoss"
-  bottom: "fc1"
-  bottom: "label3"
-  top: "loss3"
-}  
