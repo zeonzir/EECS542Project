@@ -1,48 +1,62 @@
 name: "KittiNet"
 layer {
-  name: "data"
+  name: "data1"
   type: "HDF5Data"
   top: "X"
-	top: "y"
+  top: "y"
   include {
     phase: TRAIN
    }
 
   hdf5_data_param {
-    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_list.txt"
-    batch_size: 80 
+    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_left_list.txt"
+    batch_size: 100 
   }
 }
 layer {
-  name: "data"
+  name: "data2"
   type: "HDF5Data"
-  top: "X"
-  top: "y"
+  top: "XR"
   include {
-    phase: TEST
+    phase: TRAIN
    }
+
   hdf5_data_param {
-    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/test_h5_list.txt"
-    batch_size: 80
-   }
+    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_right_list.txt"
+    batch_size: 100 
+  }
 }
 ## Slicing images to create the left and right ones
-layer { 
-  name: "slice_pair"
-  type: "Slice"
-  bottom: "X"
-  top: "data"
-  top: "data_p"
-  slice_param {
-    slice_dim: 1
-    slice_point: 3
-   }
-}
+##layer { 
+##  name: "slice_pair"
+##  type: "Slice"
+##  bottom: "X"
+##  top: "data"
+##  top: "data_p"
+##  slice_param {
+##    slice_dim: 1
+##    slice_point: 3
+##   }
+##}
+## Slicing labels
+##layer {
+##  name: "slicelabels"
+##  type: "Slice"
+##  bottom: "y"
+##  top: "label1"
+##  top: "label2"
+##  top: "label3"
+##  slice_param {
+##    slice_dim: 1
+##    slice_point: 1
+##    slice_point: 2
+##  }
+##}
 ## BCNN layer 1
 layer {
   name: "conv1a"
   type: "Convolution"
-  bottom: "data"
+  bottom: "X"
   top: "conv1a"
   param {
     name: "conv1_w"
@@ -265,7 +279,7 @@ layer {
 layer {
   name: "conv1b"
   type: "Convolution"
-  bottom: "data_p"
+  bottom: "XR"
   top: "conv1b"
   param {
     name: "conv1_w"
@@ -618,8 +632,42 @@ layer {
     }
   }
 }
+## Slicing labels
+##layer {
+##  name: "slicelabelop"
+##  type: "Slice"
+##  bottom: "fc1"
+##  top: "op1"
+##  top: "op2"
+##  top: "op3"
+##  slice_param {
+##    slice_dim: 1
+##    slice_point: 1
+##    slice_point: 2
+##  }
+##}
+##layer {
+##  name: "softmaxloss"
+##  type: "SoftmaxWithLoss"
+##  bottom: "op1"
+##  bottom: "label1"
+##  top: "loss1"
+##  include {
+##    phase: TRAIN
+##  }
+##}
+##layer {
+##  name: "softmaxloss2"
+##  type: "SoftmaxWithLoss"
+##  bottom: "op2"
+##  bottom: "label2"
+##  top: "loss2"
+##  include {
+##    phase: TRAIN
+##  }
+##}
 layer {
-  name: "eucloss"
+  name: "loss3"
   type: "EuclideanLoss"
   bottom: "op"
   bottom: "y"
