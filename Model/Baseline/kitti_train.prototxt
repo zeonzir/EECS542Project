@@ -9,8 +9,8 @@ layer {
    }
 
   hdf5_data_param {
-    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_left_list.txt"
-    batch_size: 100 
+    source: "/media/madantrg/Disk1/Projects/EECS542/EECS542Project/dataset/train_h5_left_list.txt"
+    batch_size: 128 
   }
 }
 layer {
@@ -22,8 +22,8 @@ layer {
    }
 
   hdf5_data_param {
-    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_right_list.txt"
-    batch_size: 100 
+    source: "/media/madantrg/Disk1/Projects/EECS542/EECS542Project/dataset/train_h5_right_list.txt"
+    batch_size: 128 
   }
 }
 ## Slicing images to create the left and right ones
@@ -540,6 +540,12 @@ layer {
   }
 }
 layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "conv6"
+  top: "conv6"
+}
+layer {
   name: "conv7"
   type: "Convolution"
   bottom: "conv6"
@@ -570,6 +576,12 @@ layer {
   }
 }
 layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "conv7"
+  top: "conv7"
+}
+layer {
   name: "fc1"
   type: "InnerProduct"
   bottom: "conv7"
@@ -597,6 +609,12 @@ layer {
   }
 }
 layer {
+  name: "relu8"
+  type: "ReLU"
+  bottom: "fc1"
+  top: "fc1"
+}
+layer {
   name: "drop1"
   type: "Dropout"
   bottom: "fc1"
@@ -621,7 +639,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 3
+    num_output: 1 
     weight_filler {
         type: "gaussian"
         std: 0.01
