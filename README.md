@@ -1,6 +1,7 @@
 # EECS542Project
 Visual odometry project
 Updates in inverse chronological order
+- Sigmoid and Euclidean loss fails, converting from stacked input to split input (left channel has labels)
 - After 40K iterations training loss not right, beginning to debug
 - Discussed baseline 3 and 4 network structures
 - Training started
