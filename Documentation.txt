@@ -79,6 +79,8 @@ export LD_LIBRARY_PATH=/usr/local/cuda-<version>/lib64:$LD_LIBRARY_PATH
 export PATH
 # Caffe Root
 export CAFFE_ROOT=/home/<username>/caffe
+# Python path
+export PYTHONPATH=$CAFFE_ROOT/python:$PYTHONPATH
 
 References: http://caffe.berkeleyvision.org/installation.html, https://gist.github.com/titipata/f0ef48ad2f0ebc07bcb9,
 https://github.com/BVLC/caffe, http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/#axzz44Bgd8tA3

@@ -69,7 +69,7 @@ if __name__ == '__main__':
             img[1,:,:] = imgl[1,:,:].T
             img[2,:,:] = imgl[0,:,:].T
             X[i] = img
-            S = [float(item) for item in (np.asarray(lab_lines[len_count+i].strip('\n').split(' '),dtype='float')-np.asarray(lab_lines[r_true_idx].strip('\n').split(' '),dtype='float'))]
+            S = [float(item) for item in (np.asarray(lab_lines[len_count+i].strip('\n').split(' '),dtype='float'))]
             y[i,:] =  S
         h5_name = h5_path+str(count)+'.h5' # h5 path : eg. 'processed_data/HDF5/train_'
         with h5py.File(h5_name,'w') as H:
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             img[1,:,:] = imgl[1,:,:].T
             img[2,:,:] = imgl[0,:,:].T
             X[i] = img
-            S = [float(item) for item in (np.asarray(lab_lines[len_count+i].strip('\n').split(' '),dtype='float')-np.asarray(lab_lines[r_true_idx].strip('\n').split(' '),dtype='float'))]
+            S = [float(item) for item in (np.asarray(lab_lines[len_count+i].strip('\n').split(' '),dtype='float'))]
             y[i,:] =  S
         h5_name = h5_path+str(count)+'.h5'
         with h5py.File(h5_name,'w') as H:

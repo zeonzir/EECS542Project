@@ -55,22 +55,22 @@ def create_labels(files,dattX,dattY,dattZ,datrX,datrY,datrZ,X,Z,Y,dest):
     with open(dest,'w') as P:
         for item in range(len(dattX)):        
             # Read file
-            idx = np.where(X>dattX[item])
-            idz = np.where(Z>dattZ[item])
-            idy = np.where(Y>datrY[item])
-            if len(idx[0]) == 0:
-                idx = [[19]]
-            if len(idy[0]) == 0:
-                idy = [[19]]
-            if len(idz[0]) == 0:
-                idz = [[19]]
-            P.write(str(idx[0][0]-1)+' '+str(idz[0][0]-1)+' '+str(idy[0][0]-1)+'\n')
-            #P.write(str(dattX[item])+' '+str(dattZ[item])+' '+str(datrY[item]/max(datrY))+'\n')
+            #idx = np.where(X>dattX[item])
+            #idz = np.where(Z>dattZ[item])
+            #idy = np.where(Y>datrY[item])
+            #if len(idx[0]) == 0:
+            #    idx = [[19]]
+            #if len(idy[0]) == 0:
+            #    idy = [[19]]
+            #if len(idz[0]) == 0:
+            #    idz = [[19]]
+            #P.write(str(idx[0][0]-1)+' '+str(idz[0][0]-1)+' '+str(idy[0][0]-1)+'\n')
+            P.write(str(dattX[item])+' '+str(dattY[item])+' '+str(dattZ[item])+' '+str(datrX[item])+' '+str(datrY[item])+' '+str(datrZ[item])+'\n')
 
 
 if __name__=='__main__':
-    pose_path = '/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/poses/'
-    dest_path = '/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/bin_labels_old.txt'
+    pose_path = '/z/Projects/EECS542/EECS542Project/dataset/poses/'
+    dest_path = '/z/Projects/EECS542/EECS542Project/dataset/bin_labels.txt'
 
 
     files = os.listdir(pose_path)
