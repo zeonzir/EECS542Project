@@ -26,32 +26,20 @@ layer {
     batch_size: 100 
   }
 }
-## Slicing images to create the left and right ones
-##layer { 
-##  name: "slice_pair"
-##  type: "Slice"
-##  bottom: "X"
-##  top: "data"
-##  top: "data_p"
-##  slice_param {
-##    slice_dim: 1
-##    slice_point: 3
-##   }
-##}
 ## Slicing labels
-##layer {
-##  name: "slicelabels"
-##  type: "Slice"
-##  bottom: "y"
-##  top: "label1"
-##  top: "label2"
-##  top: "label3"
-##  slice_param {
-##    slice_dim: 1
-##    slice_point: 1
-##    slice_point: 2
-##  }
-##}
+#layer {
+#  name: "slicelabels"
+#  type: "Slice"
+#  bottom: "y"
+#  top: "label1"
+#  top: "label2"
+#  top: "label3"
+#  slice_param {
+#    slice_dim: 1
+#    slice_point: 1
+#    slice_point: 2
+#  }
+#}
 ## BCNN layer 1
 layer {
   name: "conv1a"
@@ -540,6 +528,12 @@ layer {
   }
 }
 layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "conv6"
+  top: "conv6"
+}
+layer {
   name: "conv7"
   type: "Convolution"
   bottom: "conv6"
@@ -570,6 +564,12 @@ layer {
   }
 }
 layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "conv7"
+  top: "conv7"
+}
+layer {
   name: "fc1"
   type: "InnerProduct"
   bottom: "conv7"
@@ -595,6 +595,12 @@ layer {
         value: 0
     }
   }
+}
+layer {
+  name: "relu8"
+  type: "ReLU"
+  bottom: "fc1"
+  top: "fc1"
 }
 layer {
   name: "drop1"
@@ -628,51 +634,58 @@ layer {
     }
     bias_filler {
         type: "constant"
-        value: 0
+        #value: 0
     }
   }
 }
 ## Slicing labels
-##layer {
-##  name: "slicelabelop"
-##  type: "Slice"
-##  bottom: "fc1"
-##  top: "op1"
-##  top: "op2"
-##  top: "op3"
-##  slice_param {
-##    slice_dim: 1
-##    slice_point: 1
-##    slice_point: 2
-##  }
-##}
-##layer {
-##  name: "softmaxloss"
-##  type: "SoftmaxWithLoss"
-##  bottom: "op1"
-##  bottom: "label1"
-##  top: "loss1"
-##  include {
-##    phase: TRAIN
-##  }
-##}
-##layer {
-##  name: "softmaxloss2"
-##  type: "SoftmaxWithLoss"
-##  bottom: "op2"
-##  bottom: "label2"
-##  top: "loss2"
-##  include {
-##    phase: TRAIN
-##  }
-##}
+#layer {
+#  name: "slicelabelop"
+#  type: "Slice"
+#  bottom: "op"
+#  top: "op1"
+#  top: "op2"
+#  top: "op3"
+#  slice_param {
+#    slice_dim: 1
+#    slice_point: 1
+#    slice_point: 2
+#  }
+#}
 layer {
-  name: "loss3"
+  name: "euclidloss"
   type: "EuclideanLoss"
   bottom: "op"
   bottom: "y"
   top: "loss"
-  include {
-    phase: TRAIN
-  }
 }
+#layer {
+#  name: "softmaxloss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "op1"
+#  bottom: "label1"
+#  top: "lossX"
+#  include {
+#    phase: TRAIN
+#  }
+#}
+#layer {
+#  name: "softmaxloss2"
+#  type: "SoftmaxWithLoss"
+#  bottom: "op2"
+#  bottom: "label2"
+#  top: "lossZ"
+#  include {
+#    phase: TRAIN
+#  }
+#}
+#layer {
+#  name: "softmaxloss3"
+#  type: "SoftmaxWithLoss"
+#  bottom: "op3"
+#  bottom: "label3"
+#  top: "lossY"
+#  include {
+#    phase: TRAIN
+#  }
+#}
