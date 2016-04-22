@@ -9,8 +9,8 @@ layer {
    }
 
   hdf5_data_param {
-    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_left_list.txt"
-    batch_size: 100 
+    source: "/media/madantrg/Disk1/Projects/EECS542/EECS542Project/dataset/train_h5_left_list.txt"
+    batch_size: 128 
   }
 }
 layer {
@@ -22,8 +22,8 @@ layer {
    }
 
   hdf5_data_param {
-    source: "/media/zeonzir/Data/EECS542/Project/EECS542Project/dataset/train_h5_right_list.txt"
-    batch_size: 100 
+    source: "/media/madantrg/Disk1/Projects/EECS542/EECS542Project/dataset/train_h5_right_list.txt"
+    batch_size: 128 
   }
 }
 ## Slicing labels
@@ -627,7 +627,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 3
+    num_output: 1 
     weight_filler {
         type: "gaussian"
         std: 0.01
